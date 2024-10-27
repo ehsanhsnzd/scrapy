@@ -1,0 +1,35 @@
+version: '3'
+services:
+  scrapy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    depends_on:
+      - postgres
+      - redis
+    command: ["/bin/sh", "-c", "cd jobs_project && scrapy crawl job_spider"]
+
+  postgres:
+    image: postgres:13
+    container_name: postgres_service
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: decanaria
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis
+    container_name: redis_service
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo
+    container_name: mongo_service
+    ports:
+      - "27017:27017"
